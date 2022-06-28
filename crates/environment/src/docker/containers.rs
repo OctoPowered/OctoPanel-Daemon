@@ -86,7 +86,7 @@ pub struct CreateContainer {
     env: Option<Vec<String>>,
 }
 
-pub async fn create_container(opts: CreateContainer) {
+pub async fn create_container(opts: CreateContainer) -> DockerResult<()> {
     let instance = DOCKER_INSTANCE.lock().await;
 
     let docker = instance.as_ref().unwrap();
@@ -108,5 +108,7 @@ pub async fn create_container(opts: CreateContainer) {
         ..Default::default()
     };
 
-    docker.create_container(Some(options), config).await;
+    docker.create_container(Some(options), config).await?;
+
+    Ok(())
 }
