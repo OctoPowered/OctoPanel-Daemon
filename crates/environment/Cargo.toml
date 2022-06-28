@@ -11,5 +11,12 @@ lazy_static = "1.4.0"
 sysinfo = "0.24.5"
 tracing = "0.1.23"
 futures = "0.3.21"
-
 remote = { path = "../remote"}
+
+[dependencies.uuid]
+version = "1.1.2"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]

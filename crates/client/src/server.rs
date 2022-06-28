@@ -1,6 +1,5 @@
 use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 
-use colored::Colorize;
 use remote::{
     rpc_docker::docker_statistics_server::DockerStatisticsServer,
     system_statistics::system_transmitter_server::SystemTransmitterServer,
