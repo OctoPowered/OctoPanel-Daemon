@@ -1,0 +1,16 @@
+syntax = "proto3";
+package system;
+
+service SystemTransmitter {
+  rpc GetSystemStats(SystemStatsRequest) returns (SystemStatsReponse);
+}
+
+message SystemStatsRequest { string name = 1; }
+
+message SystemStatsReponse {
+  string version = 1;
+  string kernelVersion = 2;
+  string architecture = 3;
+  string os = 4;
+  string cpu = 5;
+}
