@@ -8,7 +8,7 @@ use remote::{
 use tonic::transport::Server;
 use tracing::info;
 
-use crate::{constants, dockerhandle::DockerRpcService, systemhandle::SystemService};
+use crate::{dockerhandle::DockerRpcService, systemhandle::SystemService};
 
 pub struct ServerOptions {
     pub address: IpAddr,
@@ -33,14 +33,12 @@ pub async fn create(options: ServerOptions) -> Result<(), tonic::transport::Erro
     let service_system = SystemService::default();
     let docker_system = DockerRpcService::default();
 
-    println!("{}", constants::LOGO.bright_red());
-    println!("{}", constants::SUBTEXT.bright_blue());
-
     info!("Creating GRPC server...");
 
-    info!("Running gRPC server on {}", addr);
+    info!(message = "Running gRPC server.", %addr);
 
     Server::builder()
+        .trace_fn(|_| tracing::info_span!("gRPC"))
         .add_service(SystemTransmitterServer::new(service_system))
         .add_service(DockerStatisticsServer::new(docker_system))
         .serve(addr)
