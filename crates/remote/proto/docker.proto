@@ -5,6 +5,8 @@ service DockerStatistics {
   rpc GetContainerStat(ContainerStatRequest) returns (ContainerStatResponse);
   rpc GetContainerResourceStats(ContainerResourceStatsRequest)
       returns (ContainerResourceStatsResponse);
+  rpc StreamContainerResourceStats(ContainerResourceStatsRequestStream)
+      returns (stream ContainerResourceStatsResponse);
   /*
     rpc GetContainerStats(GetContainerStatsRequest)
         returns (GetContainerStatsResponse);
@@ -24,6 +26,11 @@ message ContainerStatResponse {
   string image = 3;
   string status = 4;
   string created = 5;
+}
+
+message ContainerResourceStatsRequestStream {
+  string container_id = 1;
+  int32 interval = 2;
 }
 
 message ContainerResourceStatsRequest { string container_id = 1; }

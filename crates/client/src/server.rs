@@ -4,10 +4,12 @@ use remote::{
     rpc_docker::docker_statistics_server::DockerStatisticsServer,
     system_statistics::system_transmitter_server::SystemTransmitterServer,
 };
-use tonic::transport::Server;
+use tonic::{transport::Server, Response};
 use tracing::info;
 
 use crate::{dockerhandle::DockerRpcService, systemhandle::SystemService};
+
+pub type EchoResult<T> = Result<Response<T>, tonic::Status>;
 
 pub struct ServerOptions {
     pub address: IpAddr,

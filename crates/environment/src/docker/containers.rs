@@ -69,6 +69,7 @@ pub async fn get_container_resource_stats(
                 network_tx: net_tx,
             }),
         });
+        break;
     }
 
     if container_stats.is_some() {
