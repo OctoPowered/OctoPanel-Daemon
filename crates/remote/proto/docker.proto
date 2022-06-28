@@ -1,0 +1,26 @@
+syntax = "proto3";
+package docker;
+
+service DockerStatistics {
+  rpc GetContainerStat(GetContainerStatRequest)
+      returns (GetContainerStatResponse);
+  /*
+    rpc GetContainerStats(GetContainerStatsRequest)
+        returns (GetContainerStatsResponse);
+
+    rpc GetContainerLogs(GetContainerLogsRequest)
+        returns (GetContainerLogsResponse);
+    rpc GetContainerLogsStream(GetContainerLogsStreamRequest)
+        returns (GetContainerLogsStreamResponse);
+        */
+}
+
+message GetContainerStatRequest { string container_id = 1; }
+
+message GetContainerStatResponse {
+  string container_id = 1;
+  string name = 2;
+  string image = 3;
+  string status = 4;
+  string created = 5;
+}

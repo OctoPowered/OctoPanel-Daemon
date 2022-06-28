@@ -9,6 +9,7 @@ edition = "2021"
 bollard = "0.12.0"
 lazy_static = "1.4.0"
 sysinfo = "0.24.5"
-log = "0.4.0"
+tracing = "0.1.23"
+futures = "0.3.21"
 
 remote = { path = "../remote"}

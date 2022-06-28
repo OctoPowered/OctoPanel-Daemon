@@ -1,11 +1,14 @@
 use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 
 use colored::Colorize;
-use remote::system_statistics::system_transmitter_server::SystemTransmitterServer;
+use remote::{
+    rpc_docker::docker_statistics_server::DockerStatisticsServer,
+    system_statistics::system_transmitter_server::SystemTransmitterServer,
+};
 use tonic::transport::Server;
 use tracing::info;
 
-use crate::{constants, systemhandle::SystemService};
+use crate::{constants, dockerhandle::DockerRpcService, systemhandle::SystemService};
 
 pub struct ServerOptions {
     pub address: IpAddr,
@@ -28,6 +31,7 @@ pub async fn create(options: ServerOptions) -> Result<(), tonic::transport::Erro
     };
 
     let service_system = SystemService::default();
+    let docker_system = DockerRpcService::default();
 
     println!("{}", constants::LOGO.bright_red());
     println!("{}", constants::SUBTEXT.bright_blue());
@@ -36,6 +40,7 @@ pub async fn create(options: ServerOptions) -> Result<(), tonic::transport::Erro
 
     Server::builder()
         .add_service(SystemTransmitterServer::new(service_system))
+        .add_service(DockerStatisticsServer::new(docker_system))
         .serve(addr)
         .await
 }

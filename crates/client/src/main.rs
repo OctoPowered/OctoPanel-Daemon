@@ -2,6 +2,7 @@ use log::info;
 use server::ServerOptions;
 
 mod constants;
+mod dockerhandle;
 mod logging;
 mod server;
 mod systemhandle;
