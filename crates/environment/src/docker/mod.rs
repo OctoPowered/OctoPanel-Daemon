@@ -1,19 +1,20 @@
 use bollard::{
-    models::{ContainerStateStatusEnum, Ipam, NetworkCreateResponse},
+    models::{Ipam, NetworkCreateResponse},
     network::CreateNetworkOptions,
     Docker,
 };
 use futures::lock::Mutex;
 use lazy_static::lazy_static;
-use remote::rpc_docker::{GetContainerStatRequest, GetContainerStatResponse};
 use std::collections::HashMap;
-use tracing::{debug, info};
+use tracing::log::{debug, info};
 
-type DockerResult<T> = Result<T, Box<dyn std::error::Error>>;
-type BollardResult<T> = Result<T, bollard::errors::Error>;
+pub type DockerResult<T> = Result<T, Box<dyn std::error::Error>>;
+pub type BollardResult<T> = Result<T, bollard::errors::Error>;
+
+pub mod containers;
 
 lazy_static! {
-    static ref DOCKER_INSTANCE: Mutex<Option<Docker>> = Mutex::new(Option::None);
+    pub static ref DOCKER_INSTANCE: Mutex<Option<Docker>> = Mutex::new(Option::None);
 }
 
 /// Get a Docker instance.
@@ -40,29 +41,6 @@ pub async fn configure_docker() {
         debug!("{:?}", err);
     } else {
         info!("Created Docker's OctoNet network.");
-    }
-}
-
-pub async fn get_container_stats(container_id: &str) -> DockerResult<GetContainerStatResponse> {
-    let instance = DOCKER_INSTANCE.lock().await;
-
-    let docker = instance.as_ref().unwrap();
-
-    if let Ok(response) = docker.inspect_container(container_id, None).await {
-        Ok(GetContainerStatResponse {
-            container_id: response.id.unwrap_or("Unknown".to_string()),
-            name: response.name.unwrap_or("Unknown".to_string()),
-            image: response.image.unwrap_or("Unknown".to_string()),
-            status: response
-                .state
-                .unwrap()
-                .status
-                .unwrap_or(ContainerStateStatusEnum::EMPTY)
-                .to_string(),
-            created: response.created.unwrap_or("Unknown".to_string()),
-        })
-    } else {
-        return Err("Could not get container stats".into());
     }
 }
 

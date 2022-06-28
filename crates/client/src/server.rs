@@ -38,6 +38,8 @@ pub async fn create(options: ServerOptions) -> Result<(), tonic::transport::Erro
 
     info!("Creating GRPC server...");
 
+    info!("Running gRPC server on {}", addr);
+
     Server::builder()
         .add_service(SystemTransmitterServer::new(service_system))
         .add_service(DockerStatisticsServer::new(docker_system))

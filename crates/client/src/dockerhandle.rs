@@ -1,3 +1,4 @@
+use environment::docker::containers;
 use remote::rpc_docker::{
     docker_statistics_server::DockerStatistics, GetContainerStatRequest, GetContainerStatResponse,
 };
@@ -15,7 +16,7 @@ impl DockerStatistics for DockerRpcService {
     ) -> Result<Response<GetContainerStatResponse>, Status> {
         info!("Got a request: {:?}", req);
         let container_id = req.get_ref().container_id.as_str();
-        let container_stats = environment::docker::get_container_stats(container_id).await;
+        let container_stats = containers::get_container_stats(container_id).await;
         Ok(Response::new(container_stats.unwrap()))
     }
 }
