@@ -6,7 +6,7 @@ use bollard::{
 use futures::lock::Mutex;
 use lazy_static::lazy_static;
 use std::collections::HashMap;
-use tracing::log::{debug, info};
+use tracing::{debug, info};
 
 pub type DockerResult<T> = Result<T, Box<dyn std::error::Error>>;
 pub type BollardResult<T> = Result<T, bollard::errors::Error>;
@@ -37,8 +37,18 @@ pub async fn configure_docker() {
 
     info!("Configuring Docker...");
     if let Err(err) = create_network("bridge", &docker).await {
-        info!("Already created Docker's OctoNet network. Skipping...");
-        debug!("{:?}", err);
+        match err {
+            bollard::errors::Error::DockerResponseServerError {
+                status_code,
+                message,
+            } => {
+                info!("Already created Docker's OctoNet network. Skipping...");
+                debug!("Status code: {:?}\n\tMessage: {:?}", status_code, message);
+            }
+            err => {
+                panic!("Could not create Docker's OctoNet network Error: {:?}", err);
+            }
+        };
     } else {
         info!("Created Docker's OctoNet network.");
     }
